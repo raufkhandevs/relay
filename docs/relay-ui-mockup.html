@@ -1,0 +1,608 @@
+<title>Relay Support Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F7F8FA; --surface:#FFFFFF; --surface-2:#EFF2F6; --surface-3:#E6EAF1;
+  --ink:#131A24; --ink-2:#3D4856; --muted:#5B6676; --faint:#8A96A6;
+  --rule:#DFE4EC; --rule-2:#CBD3DF;
+  --accent:#1D6F8B; --accent-soft:#E2F0F5; --accent-ink:#12556C;
+  --open:#B45309; --open-soft:#FBEEDC;
+  --pending:#5B6676; --pending-soft:#E9EDF2;
+  --resolved:#15803D; --resolved-soft:#DFF1E5;
+  --shadow:0 1px 2px rgba(19,26,36,.06), 0 8px 24px -12px rgba(19,26,36,.18);
+  --shadow-lift:0 2px 4px rgba(19,26,36,.08), 0 18px 44px -16px rgba(19,26,36,.30);
+  --sans:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --display:"Archivo",var(--sans);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1319; --surface:#161D26; --surface-2:#1D2530; --surface-3:#252E3A;
+    --ink:#E6EAF0; --ink-2:#BAC4D0; --muted:#8A96A6; --faint:#6C7887;
+    --rule:#242E3A; --rule-2:#33404F;
+    --accent:#4FA8C4; --accent-soft:#152A33; --accent-ink:#8FCFE2;
+    --open:#E0A159; --open-soft:#332614;
+    --pending:#8A96A6; --pending-soft:#222B36;
+    --resolved:#5CC489; --resolved-soft:#12301F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    --shadow-lift:0 2px 4px rgba(0,0,0,.5), 0 18px 44px -16px rgba(0,0,0,.75);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1319; --surface:#161D26; --surface-2:#1D2530; --surface-3:#252E3A;
+  --ink:#E6EAF0; --ink-2:#BAC4D0; --muted:#8A96A6; --faint:#6C7887;
+  --rule:#242E3A; --rule-2:#33404F;
+  --accent:#4FA8C4; --accent-soft:#152A33; --accent-ink:#8FCFE2;
+  --open:#E0A159; --open-soft:#332614;
+  --pending:#8A96A6; --pending-soft:#222B36;
+  --resolved:#5CC489; --resolved-soft:#12301F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.5), 0 18px 44px -16px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:24px;padding-block:0}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.015em}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);margin:0}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--rule);background:var(--surface)}
+.masthead .wrap{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;
+  justify-content:space-between;padding-block:36px 30px}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:34px;height:34px;border-radius:9px;background:var(--accent);flex:none;
+  display:grid;place-items:center}
+.mark span{display:block;width:14px;height:14px;border:2.5px solid #fff;border-radius:50%;
+  border-right-color:transparent;transform:rotate(-30deg)}
+.brand h1{font-size:26px;font-weight:700}
+.brand .sub{font-size:13px;color:var(--muted);margin-top:1px}
+.stack-key{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:999px;
+  border:1px solid var(--rule-2);color:var(--ink-2);background:var(--surface-2);white-space:nowrap}
+
+/* ---------- thesis ---------- */
+.thesis{padding-block:44px 8px}
+.thesis h2{font-size:clamp(26px,4vw,38px);font-weight:700;max-width:20ch;line-height:1.15}
+.thesis p{max-width:62ch;color:var(--muted);margin-top:14px;font-size:16px}
+.thesis .accentword{color:var(--accent)}
+
+/* ---------- sections ---------- */
+section{padding-block:46px}
+.sechead{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;
+  border-top:1px solid var(--rule);padding-top:18px;margin-bottom:26px}
+.sechead h3{font-size:20px;font-weight:600}
+.sechead .role{font-size:13.5px;color:var(--muted)}
+.sechead .tag{font-family:var(--mono);font-size:11px;color:var(--accent-ink);
+  background:var(--accent-soft);padding:4px 9px;border-radius:5px;margin-left:auto;white-space:nowrap}
+
+/* ---------- device frames ---------- */
+.frame{background:var(--surface);border:1px solid var(--rule-2);border-radius:11px;
+  box-shadow:var(--shadow-lift);overflow:hidden}
+.titlebar{display:flex;align-items:center;gap:10px;padding:9px 13px;
+  background:var(--surface-2);border-bottom:1px solid var(--rule)}
+.lights{display:flex;gap:6px;flex:none}
+.lights i{width:11px;height:11px;border-radius:50%;display:block}
+.lights i:nth-child(1){background:#EC6A5E}.lights i:nth-child(2){background:#F4BF4F}
+.lights i:nth-child(3){background:#61C554}
+.titlebar .name{font-size:12px;color:var(--muted);font-weight:500}
+.titlebar .right{margin-left:auto;display:flex;align-items:center;gap:9px}
+.traybadge{font-family:var(--mono);font-size:10px;background:var(--open);color:#fff;
+  padding:1px 6px;border-radius:999px}
+
+/* desktop console grid */
+.console{display:grid;grid-template-columns:212px 1fr 190px;min-height:430px}
+.queue{border-right:1px solid var(--rule);background:var(--surface-2);display:flex;flex-direction:column}
+.queue-head{padding:12px 13px 9px;display:flex;align-items:center;justify-content:space-between}
+.queue-head .t{font-size:12px;font-weight:600;letter-spacing:.02em}
+.queue-head .n{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.qitem{padding:10px 13px;border-top:1px solid var(--rule);display:grid;gap:3px;cursor:default}
+.qitem.active{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+.qitem .row1{display:flex;align-items:center;gap:6px}
+.qitem .who{font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qitem .when{font-family:var(--mono);font-size:10px;color:var(--faint);margin-left:auto;flex:none}
+.qitem .snip{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.unread{background:var(--accent);color:#fff;font-family:var(--mono);font-size:9.5px;
+  padding:1px 5px;border-radius:999px;flex:none}
+.pip{width:6px;height:6px;border-radius:50%;flex:none;background:var(--resolved)}
+
+.thread{display:flex;flex-direction:column;min-width:0}
+.thread-head{padding:11px 16px;border-bottom:1px solid var(--rule);display:flex;
+  align-items:center;gap:10px;flex-wrap:wrap}
+.thread-head .subj{font-size:13.5px;font-weight:600}
+.tid{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.pill{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;letter-spacing:.02em;
+  font-family:var(--mono);white-space:nowrap}
+.pill.open{background:var(--open-soft);color:var(--open)}
+.pill.resolved{background:var(--resolved-soft);color:var(--resolved)}
+.pill.pending{background:var(--pending-soft);color:var(--pending)}
+.msgs{padding:16px;display:flex;flex-direction:column;gap:13px;flex:1;min-width:0}
+.msg{display:flex;gap:9px;max-width:88%}
+.msg.out{margin-left:auto;flex-direction:row-reverse}
+.av{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;
+  font-size:10.5px;font-weight:600;font-family:var(--mono);
+  background:var(--surface-3);color:var(--ink-2)}
+.av.agent{background:var(--accent);color:#fff}
+.bub{background:var(--surface-2);border:1px solid var(--rule);border-radius:11px;
+  padding:8px 11px;font-size:12.5px;line-height:1.5;min-width:0}
+.msg.out .bub{background:var(--accent);border-color:var(--accent);color:#fff}
+.meta{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:4px}
+.msg.out .meta{text-align:right}
+.typing{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);
+  font-style:italic;padding-left:35px}
+.typing b{display:flex;gap:3px}
+.typing b i{width:4px;height:4px;border-radius:50%;background:var(--faint);display:block}
+.composer{border-top:1px solid var(--rule);padding:10px 16px;display:flex;gap:9px;align-items:center}
+.composer .field{flex:1;background:var(--surface-2);border:1px solid var(--rule-2);
+  border-radius:8px;padding:8px 11px;font-size:12.5px;color:var(--faint)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:8px 15px;
+  font-size:12.5px;font-weight:600;font-family:var(--sans);flex:none}
+
+.rail{border-left:1px solid var(--rule);padding:13px;display:flex;flex-direction:column;gap:14px;
+  background:var(--surface-2)}
+.rail h4{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 6px;font-weight:500}
+.rail .val{font-size:12.5px;color:var(--ink-2)}
+.rail .val strong{font-weight:600;color:var(--ink)}
+.presence{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted)}
+
+/* browser frame */
+.urlbar{display:flex;align-items:center;gap:8px;padding:8px 13px;background:var(--surface-2);
+  border-bottom:1px solid var(--rule)}
+.url{flex:1;background:var(--surface);border:1px solid var(--rule-2);border-radius:6px;
+  padding:4px 10px;font-family:var(--mono);font-size:11px;color:var(--muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.webnav{display:flex;align-items:center;gap:14px;padding:11px 18px;border-bottom:1px solid var(--rule)}
+.webnav .logo{display:flex;align-items:center;gap:7px;font-family:var(--display);
+  font-weight:700;font-size:14px}
+.webnav .logo i{width:17px;height:17px;border-radius:5px;background:var(--accent);display:block;flex:none}
+.webnav a{font-size:12px;color:var(--muted);text-decoration:none}
+.webnav a.on{color:var(--ink);font-weight:600;box-shadow:0 2px 0 var(--accent)}
+.webnav .me{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}
+.webbody{padding:18px}
+.webbody h5{font-family:var(--display);font-size:17px;margin:0 0 3px;font-weight:600}
+.webbody .lede{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.tlist{border:1px solid var(--rule);border-radius:9px;overflow:hidden}
+.trow{display:flex;align-items:center;gap:11px;padding:11px 13px;border-bottom:1px solid var(--rule)}
+.trow:last-child{border-bottom:0}
+.trow.sel{background:var(--accent-soft)}
+.trow .s{font-size:12.5px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow .d{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-left:auto;flex:none}
+
+/* phone */
+.phone{width:296px;max-width:100%;margin:0 auto;background:var(--surface);border-radius:34px;
+  border:1px solid var(--rule-2);box-shadow:var(--shadow-lift);overflow:hidden;
+  padding:9px;position:relative}
+.screen{border-radius:26px;overflow:hidden;background:var(--surface);
+  border:1px solid var(--rule);display:flex;flex-direction:column;height:556px}
+.ios-status{display:flex;align-items:center;padding:9px 18px 5px;font-size:11px;font-weight:600;
+  font-family:var(--mono)}
+.ios-status .r{margin-left:auto;display:flex;gap:5px;align-items:center;color:var(--ink-2)}
+.ios-nav{display:flex;align-items:center;gap:9px;padding:6px 14px 10px;border-bottom:1px solid var(--rule)}
+.ios-nav .back{color:var(--accent);font-size:13px;flex:none}
+.ios-nav .t{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ios-msgs{flex:1;padding:13px;display:flex;flex-direction:column;gap:11px;overflow:hidden}
+.ios-composer{border-top:1px solid var(--rule);padding:9px 13px 6px;display:flex;gap:8px;align-items:center}
+.ios-composer .field{flex:1;background:var(--surface-2);border:1px solid var(--rule-2);
+  border-radius:999px;padding:7px 13px;font-size:12px;color:var(--faint)}
+.ios-send{width:28px;height:28px;border-radius:50%;background:var(--accent);flex:none;
+  display:grid;place-items:center;color:#fff;font-size:13px}
+.home-ind{height:4px;width:110px;background:var(--rule-2);border-radius:999px;margin:6px auto 8px}
+.push{position:absolute;left:16px;right:16px;top:20px;background:var(--surface);
+  border:1px solid var(--rule-2);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow-lift);
+  display:flex;gap:9px;align-items:flex-start;z-index:2}
+.push .icn{width:22px;height:22px;border-radius:6px;background:var(--accent);flex:none}
+.push .t{font-size:11.5px;font-weight:600}
+.push .b{font-size:11px;color:var(--muted);line-height:1.4}
+.push .w{font-family:var(--mono);font-size:9.5px;color:var(--faint);margin-left:auto;flex:none}
+
+/* two-up */
+.twoup{display:grid;grid-template-columns:1fr 320px;gap:30px;align-items:start}
+.notes{display:flex;flex-direction:column;gap:16px}
+.note{border-left:2px solid var(--accent);padding:2px 0 2px 13px}
+.note h4{font-size:13px;font-weight:600;margin:0 0 3px;font-family:var(--sans)}
+.note p{font-size:13px;color:var(--muted)}
+.note code{font-family:var(--mono);font-size:11.5px;background:var(--surface-2);
+  padding:1px 5px;border-radius:4px;color:var(--accent-ink);border:1px solid var(--rule)}
+.caption{font-size:12.5px;color:var(--faint);margin-top:11px;font-family:var(--mono)}
+
+/* slice table */
+.slice{border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--surface)}
+.slice-head{display:grid;grid-template-columns:1fr repeat(3,92px);gap:10px;padding:11px 16px;
+  background:var(--surface-2);border-bottom:1px solid var(--rule);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.slice-head span:not(:first-child){text-align:center}
+.slice-row{display:grid;grid-template-columns:1fr repeat(3,92px);gap:10px;padding:11px 16px;
+  border-bottom:1px solid var(--rule);align-items:center;font-size:13.5px}
+.slice-row:last-child{border-bottom:0}
+.slice-row.later{color:var(--muted);background:var(--surface-2)}
+.slice-row span:not(:first-child){text-align:center;font-family:var(--mono);font-size:12px}
+.yes{color:var(--resolved);font-weight:600}
+.no{color:var(--faint)}
+.later-tag{font-family:var(--mono);font-size:10px;color:var(--faint);
+  border:1px solid var(--rule-2);border-radius:4px;padding:1px 5px;margin-left:8px}
+
+/* states */
+.states{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.state{border:1px solid var(--rule);border-radius:9px;padding:14px;background:var(--surface);
+  display:flex;flex-direction:column;gap:7px;min-height:128px}
+.state .k{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint)}
+.state .h{font-size:13.5px;font-weight:600}
+.state .p{font-size:12.5px;color:var(--muted);line-height:1.5}
+.state.warn{border-color:var(--open);background:var(--open-soft)}
+.state.warn .h,.state.warn .k{color:var(--open)}
+.state.warn .p{color:var(--ink-2)}
+
+footer{border-top:1px solid var(--rule);margin-top:20px}
+footer .wrap{padding-block:26px 40px;display:flex;flex-wrap:wrap;gap:12px 24px;
+  align-items:baseline;justify-content:space-between}
+footer p{font-size:12.5px;color:var(--faint)}
+footer .mono{font-family:var(--mono);font-size:11.5px}
+
+@media (max-width:900px){
+  .console{grid-template-columns:1fr;min-height:0}
+  .queue,.rail{border:0;border-bottom:1px solid var(--rule)}
+  .rail{flex-direction:row;flex-wrap:wrap;gap:18px}
+  .twoup{grid-template-columns:1fr}
+  .slice-head,.slice-row{grid-template-columns:1fr 58px 58px 58px;gap:6px;padding:10px 12px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .typing b i{animation:bl 1.4s infinite}
+  .typing b i:nth-child(2){animation-delay:.2s}
+  .typing b i:nth-child(3){animation-delay:.4s}
+  @keyframes bl{0%,60%,100%{opacity:.3}30%{opacity:1}}
+}
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark"><span></span></div>
+      <div>
+        <h1>Relay</h1>
+        <div class="sub">Support desk &middot; UI reference for the vertical slice</div>
+      </div>
+    </div>
+    <div class="stack-key">
+      <span class="chip">Laravel 13 + Inertia</span>
+      <span class="chip">Expo SDK 56</span>
+      <span class="chip">Electron + Vite</span>
+      <span class="chip">Reverb / WebSocket</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="thesis">
+    <p class="eyebrow">Slice 1 &middot; Definition of done</p>
+    <h2>One message, <span class="accentword">three clients</span>, no refresh.</h2>
+    <p>Marcus types a reply in the desktop console. It appears in Priya&rsquo;s browser and on her
+    phone in under a second, over the same websocket, authorised by the same policy. Everything
+    below exists to make that one sentence true.</p>
+  </div>
+
+  <!-- ============ ELECTRON ============ -->
+  <section>
+    <div class="sechead">
+      <h3>Agent console</h3>
+      <span class="role">Electron &middot; desktop &middot; Marcus, support agent</span>
+      <span class="tag">always open, all day</span>
+    </div>
+
+    <div class="frame">
+      <div class="titlebar">
+        <div class="lights"><i></i><i></i><i></i></div>
+        <span class="name">Relay &mdash; Agent Console</span>
+        <div class="right">
+          <span class="traybadge">3</span>
+          <span class="tid">tray</span>
+        </div>
+      </div>
+      <div class="console">
+
+        <div class="queue">
+          <div class="queue-head"><span class="t">My queue</span><span class="n">7 open</span></div>
+          <div class="qitem active">
+            <div class="row1"><span class="pip"></span><span class="who">Priya Raman</span>
+              <span class="when">now</span></div>
+            <div class="snip">Still showing the old date range&hellip;</div>
+          </div>
+          <div class="qitem">
+            <div class="row1"><span class="who">Tomas Lind</span>
+              <span class="unread">2</span><span class="when">4m</span></div>
+            <div class="snip">Invoice PDF is blank when I down&hellip;</div>
+          </div>
+          <div class="qitem">
+            <div class="row1"><span class="who">Aisha Bello</span><span class="when">22m</span></div>
+            <div class="snip">Can I move billing to annual?</div>
+          </div>
+          <div class="qitem">
+            <div class="row1"><span class="who">Dan Whitfield</span>
+              <span class="unread">1</span><span class="when">1h</span></div>
+            <div class="snip">Thanks &mdash; that sorted it.</div>
+          </div>
+        </div>
+
+        <div class="thread">
+          <div class="thread-head">
+            <span class="subj">Can&rsquo;t export invoices to CSV</span>
+            <span class="tid">TKT-2041</span>
+            <span class="pill open">OPEN</span>
+          </div>
+          <div class="msgs">
+            <div class="msg">
+              <div class="av">PR</div>
+              <div>
+                <div class="bub">The CSV export button spins for a while and then nothing
+                  downloads. I&rsquo;ve tried Chrome and Safari.</div>
+                <div class="meta">09:14</div>
+              </div>
+            </div>
+            <div class="msg out">
+              <div class="av agent">MW</div>
+              <div>
+                <div class="bub">Thanks Priya. Which date range did you have selected when it
+                  failed? That narrows it down a lot.</div>
+                <div class="meta">09:16 &middot; delivered</div>
+              </div>
+            </div>
+            <div class="msg">
+              <div class="av">PR</div>
+              <div>
+                <div class="bub">Jan 1 to today. It worked fine last month.</div>
+                <div class="meta">09:17</div>
+              </div>
+            </div>
+            <div class="typing"><b><i></i><i></i><i></i></b> Priya is typing</div>
+          </div>
+          <div class="composer">
+            <div class="field">Reply to Priya&hellip;</div>
+            <button class="btn">Send</button>
+          </div>
+        </div>
+
+        <div class="rail">
+          <div>
+            <h4>Customer</h4>
+            <div class="val"><strong>Priya Raman</strong><br>priya@northgate.co</div>
+          </div>
+          <div>
+            <h4>Opened</h4>
+            <div class="val">Today, 09:14</div>
+          </div>
+          <div>
+            <h4>First response</h4>
+            <div class="val"><strong>2m</strong></div>
+          </div>
+          <div>
+            <h4>Presence</h4>
+            <div class="presence"><span class="pip"></span> Priya &middot; viewing</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="notes" style="margin-top:26px">
+      <div class="note">
+        <h4>Three panes, because an agent does three things at once</h4>
+        <p>Queue on the left so nothing is missed, conversation in the middle, customer context on
+        the right so the agent never leaves the thread to look something up. The unread count and
+        the green presence pip are the two things scanned most often, so they sit at the
+        left edge of each row where the eye lands first.</p>
+      </div>
+      <div class="note">
+        <h4>What makes this a desktop app rather than a website</h4>
+        <p>The tray badge in the title bar, a global hotkey to bring the window forward, native
+        notifications, and closing the window leaving the app running in the tray. Those arrive in
+        <strong>slice 6</strong> &mdash; but the layout assumes them now so we&rsquo;re not
+        retrofitting a menu bar later.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WEB + IOS ============ -->
+  <section>
+    <div class="sechead">
+      <h3>Customer portal &amp; mobile app</h3>
+      <span class="role">Inertia + React &middot; Expo &middot; Priya, customer</span>
+      <span class="tag">same account, same ticket</span>
+    </div>
+
+    <div class="twoup">
+      <div>
+        <div class="frame">
+          <div class="urlbar">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="url">relay.test/tickets</div>
+          </div>
+          <div class="webnav">
+            <span class="logo"><i></i> Relay</span>
+            <a href="#" class="on">My tickets</a>
+            <a href="#">New ticket</a>
+            <span class="me">Priya R. <span class="av" style="width:22px;height:22px">PR</span></span>
+          </div>
+          <div class="webbody">
+            <h5>My tickets</h5>
+            <p class="lede">Two open. We usually reply within an hour.</p>
+            <div class="tlist">
+              <div class="trow sel">
+                <span class="pill open">OPEN</span>
+                <span class="s">Can&rsquo;t export invoices to CSV</span>
+                <span class="tid">TKT-2041</span>
+                <span class="d">now</span>
+              </div>
+              <div class="trow">
+                <span class="pill pending">PENDING</span>
+                <span class="s">Add a second billing contact</span>
+                <span class="tid">TKT-2038</span>
+                <span class="d">2d</span>
+              </div>
+              <div class="trow">
+                <span class="pill resolved">RESOLVED</span>
+                <span class="s">Password reset email never arrived</span>
+                <span class="tid">TKT-1994</span>
+                <span class="d">11 Aug</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">Server-rendered through Inertia. Session cookie auth, CSRF protected.</p>
+      </div>
+
+      <div>
+        <div class="phone">
+          <div class="push">
+            <div class="icn"></div>
+            <div>
+              <div class="t">Relay</div>
+              <div class="b">Marcus replied to &ldquo;Can&rsquo;t export invoices to CSV&rdquo;</div>
+            </div>
+            <span class="w">now</span>
+          </div>
+          <div class="screen">
+            <div class="ios-status">
+              <span>9:17</span>
+              <span class="r">&#9679;&#9679;&#9679; &#9634;</span>
+            </div>
+            <div class="ios-nav">
+              <span class="back">&#8249; Tickets</span>
+              <span class="t">TKT-2041</span>
+              <span class="pill open" style="margin-left:auto">OPEN</span>
+            </div>
+            <div class="ios-msgs">
+              <div class="msg">
+                <div class="av agent">MW</div>
+                <div>
+                  <div class="bub">Thanks Priya. Which date range did you have selected
+                    when it failed?</div>
+                  <div class="meta">09:16</div>
+                </div>
+              </div>
+              <div class="msg out">
+                <div class="av">PR</div>
+                <div>
+                  <div class="bub">Jan 1 to today. It worked fine last month.</div>
+                  <div class="meta">09:17 &middot; sent</div>
+                </div>
+              </div>
+            </div>
+            <div class="ios-composer">
+              <div class="field">Message&hellip;</div>
+              <div class="ios-send">&#8593;</div>
+            </div>
+            <div class="home-ind"></div>
+          </div>
+        </div>
+        <p class="caption">Sanctum token in Keychain. Push shown backgrounded.</p>
+      </div>
+    </div>
+
+    <div class="notes" style="margin-top:26px">
+      <div class="note">
+        <h4>Deliberately the same conversation</h4>
+        <p>Both screens show TKT-2041 at 09:17. That is the comparison: identical data, identical
+        websocket, three genuinely different runtimes. Where they differ &mdash; a notification
+        banner on iOS, a URL bar on the web, a tray badge on desktop &mdash; they differ because
+        the <em>platform</em> differs, not because we drew them differently.</p>
+      </div>
+      <div class="note">
+        <h4>Two auth modes, visible in the frames</h4>
+        <p>The browser carries an <code>httpOnly</code> session cookie. The phone carries a Sanctum
+        token from the Keychain as <code>Authorization: Bearer</code>. Both hit the same
+        <code>/broadcasting/auth</code> endpoint and both are checked by the same
+        <code>TicketPolicy</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCOPE ============ -->
+  <section>
+    <div class="sechead">
+      <h3>What is drawn above but not built yet</h3>
+      <span class="role">Slice 1 scope, honestly marked</span>
+    </div>
+
+    <div class="slice">
+      <div class="slice-head">
+        <span>Capability</span><span>Web</span><span>iOS</span><span>Desktop</span>
+      </div>
+      <div class="slice-row"><span>Login &amp; session</span>
+        <span class="yes">&#10003;</span><span class="yes">&#10003;</span><span class="yes">&#10003;</span></div>
+      <div class="slice-row"><span>Ticket list</span>
+        <span class="yes">&#10003;</span><span class="yes">&#10003;</span><span class="yes">&#10003;</span></div>
+      <div class="slice-row"><span>Live message thread</span>
+        <span class="yes">&#10003;</span><span class="yes">&#10003;</span><span class="yes">&#10003;</span></div>
+      <div class="slice-row"><span>Channel authorisation via policy</span>
+        <span class="yes">&#10003;</span><span class="yes">&#10003;</span><span class="yes">&#10003;</span></div>
+      <div class="slice-row later"><span>Status &amp; assignment<span class="later-tag">slice 2</span></span>
+        <span class="no">&mdash;</span><span class="no">&mdash;</span><span class="no">&mdash;</span></div>
+      <div class="slice-row later"><span>Attachments<span class="later-tag">slice 3</span></span>
+        <span class="no">&mdash;</span><span class="no">&mdash;</span><span class="no">&mdash;</span></div>
+      <div class="slice-row later"><span>Push notification<span class="later-tag">slice 4</span></span>
+        <span class="no">&mdash;</span><span class="no">&mdash;</span><span class="no">&mdash;</span></div>
+      <div class="slice-row later"><span>Typing indicator &amp; presence<span class="later-tag">slice 5</span></span>
+        <span class="no">&mdash;</span><span class="no">&mdash;</span><span class="no">&mdash;</span></div>
+      <div class="slice-row later"><span>Tray, badge, global hotkey<span class="later-tag">slice 6</span></span>
+        <span class="no">&mdash;</span><span class="no">&mdash;</span><span class="yes">&#10003;</span></div>
+      <div class="slice-row later"><span>Offline outbox &amp; backfill<span class="later-tag">slice 7</span></span>
+        <span class="no">&mdash;</span><span class="yes">&#10003;</span><span class="no">&mdash;</span></div>
+    </div>
+    <p class="caption">The typing indicator, tray badge and push banner above are drawn so the
+    layouts reserve space for them now. They render as nothing in slice 1.</p>
+  </section>
+
+  <!-- ============ STATES ============ -->
+  <section>
+    <div class="sechead">
+      <h3>The states that actually get designed</h3>
+      <span class="role">Every screen answers all five before it ships</span>
+    </div>
+
+    <div class="states">
+      <div class="state">
+        <span class="k">Empty</span>
+        <span class="h">No tickets yet</span>
+        <span class="p">&ldquo;Nothing open. Start a ticket and we&rsquo;ll reply within the
+          hour.&rdquo; With the action right there, not a shrug.</span>
+      </div>
+      <div class="state">
+        <span class="k">Loading</span>
+        <span class="h">Skeleton rows</span>
+        <span class="p">Three ghost rows at the real row height, so nothing shifts when data lands.
+          Nothing at all under 200ms &mdash; a spinner that blinks reads as a bug.</span>
+      </div>
+      <div class="state warn">
+        <span class="k">Disconnected</span>
+        <span class="h">Reconnecting&hellip;</span>
+        <span class="p">A thin bar, not a modal. Composer stays usable; messages queue and send
+          on reconnect. This is the state mobile spends real time in.</span>
+      </div>
+      <div class="state">
+        <span class="k">Send failed</span>
+        <span class="h">Retry, inline</span>
+        <span class="p">Message stays on screen greyed with a Retry beside it. Never silently
+          dropped, never a toast that scrolls away unread.</span>
+      </div>
+      <div class="state">
+        <span class="k">Forbidden</span>
+        <span class="h">Not your ticket</span>
+        <span class="p">Policy denies both the HTTP read and the channel subscription. The client
+          never sees the subject line, only that it cannot be opened.</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Relay &middot; mockup for review. Nothing here is built yet.</p>
+    <p class="mono">backend-laravel &middot; mobile-react-native &middot; desktop-electron</p>
+  </div>
+</footer>
