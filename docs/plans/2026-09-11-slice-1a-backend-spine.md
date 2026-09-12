@@ -1749,7 +1749,7 @@ php artisan test --filter=MessageBroadcastTest
 php artisan test
 ```
 
-Expected: both green. The full suite should be 26 tests at this point.
+Expected: both green. The React starter kit ships its own test suite alongside the tests in this plan, so do not assert a specific total; assert that nothing is red.
 
 - [ ] **Step 12: Watch a real message cross a real websocket**
 

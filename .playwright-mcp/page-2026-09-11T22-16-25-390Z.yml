@@ -1,0 +1,43 @@
+- generic [ref=f2e2]:
+  - generic [ref=f2e3]:
+    - generic [ref=f2e7]:
+      - list [ref=f2e9]:
+        - listitem [ref=f2e10]:
+          - link "Relay" [ref=f2e11] [cursor=pointer]:
+            - /url: /dashboard
+      - generic [ref=f2e18]:
+        - generic [ref=f2e19]: Platform
+        - list [ref=f2e20]:
+          - listitem [ref=f2e21]:
+            - link "Dashboard" [ref=f2e22] [cursor=pointer]:
+              - /url: /dashboard
+      - generic [ref=f2e29]:
+        - list [ref=f2e32]:
+          - listitem [ref=f2e33]:
+            - link "Repository" [ref=f2e34] [cursor=pointer]:
+              - /url: https://github.com/laravel/react-starter-kit
+          - listitem [ref=f2e41]:
+            - link "Documentation" [ref=f2e42] [cursor=pointer]:
+              - /url: https://laravel.com/docs/starter-kits#react
+        - list [ref=f2e46]:
+          - listitem [ref=f2e47]:
+            - button "PR Priya Raman" [ref=f2e48]:
+              - generic [ref=f2e49]: PR
+              - generic [ref=f2e51]: Priya Raman
+    - main [ref=f2e56]:
+      - button "Toggle sidebar" [ref=f2e59]
+      - generic [ref=f2e69]:
+        - generic [ref=f2e70]:
+          - heading "Can't export invoices to CSV" [level=1] [ref=f2e71]
+          - generic [ref=f2e72]: TKT-1
+        - list [ref=f2e73]:
+          - listitem [ref=f2e74]:
+            - paragraph [ref=f2e75]: The CSV export button spins for a while and then nothing downloads. I have tried Chrome and Safari.
+            - paragraph [ref=f2e76]: Priya Raman
+          - listitem [ref=f2e77]:
+            - paragraph [ref=f2e78]: Thanks Priya. Which date range did you have selected when it failed? That narrows it down a lot.
+            - paragraph [ref=f2e79]: Marcus Webb
+          - listitem [ref=f2e80]:
+            - paragraph [ref=f2e81]: Jan 1 to today. It worked fine last month.
+            - paragraph [ref=f2e82]: Priya Raman
+  - region "Notifications alt+T"

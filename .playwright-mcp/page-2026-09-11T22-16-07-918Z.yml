@@ -1,0 +1,34 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e42]:
+    - generic [ref=f1e46]:
+      - list [ref=f1e48]:
+        - listitem [ref=f1e49]:
+          - link "Relay" [ref=f1e50] [cursor=pointer]:
+            - /url: /dashboard
+      - generic [ref=f1e57]:
+        - generic [ref=f1e58]: Platform
+        - list [ref=f1e59]:
+          - listitem [ref=f1e60]:
+            - link "Dashboard" [ref=f1e61] [cursor=pointer]:
+              - /url: /dashboard
+      - generic [ref=f1e68]:
+        - list [ref=f1e71]:
+          - listitem [ref=f1e72]:
+            - link "Repository" [ref=f1e73] [cursor=pointer]:
+              - /url: https://github.com/laravel/react-starter-kit
+          - listitem [ref=f1e80]:
+            - link "Documentation" [ref=f1e81] [cursor=pointer]:
+              - /url: https://laravel.com/docs/starter-kits#react
+        - list [ref=f1e85]:
+          - listitem [ref=f1e86]:
+            - button "PR Priya Raman" [ref=f1e87]:
+              - generic [ref=f1e88]: PR
+              - generic [ref=f1e90]: Priya Raman
+    - main [ref=f1e95]:
+      - generic [ref=f1e97]:
+        - button "Toggle sidebar" [ref=f1e98]
+        - navigation "breadcrumb" [ref=f1e100]:
+          - list [ref=f1e101]:
+            - listitem [ref=f1e102]:
+              - link "Dashboard" [disabled] [ref=f1e103]
+  - region "Notifications alt+T"
