@@ -75,8 +75,8 @@ behind on purpose.
 Slice 1  backend, web, iOS, desktop live   ████████████████████  done
 Slice 2  reply from any client, one look   ████████████████████  done
 Slice 3  attachments                       ████████████████████  done
-Slice 4  typing indicators and presence    ░░░░░░░░░░░░░░░░░░░░  next
-Slice 5  desktop tray, badge, hotkey       ░░░░░░░░░░░░░░░░░░░░
+Slice 4  typing indicator                  ████████████████████  done
+Slice 5  desktop tray, badge, hotkey       ░░░░░░░░░░░░░░░░░░░░  next
 Slice 6  offline outbox on mobile          ░░░░░░░░░░░░░░░░░░░░
 Slice 7  push notifications                ░░░░░░░░░░░░░░░░░░░░  blocked
 Slice 8  ticket creation                   ░░░░░░░░░░░░░░░░░░░░
