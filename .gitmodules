@@ -4,3 +4,6 @@
 [submodule "mobile-react-native"]
 	path = mobile-react-native
 	url = https://github.com/raufkhandevs/relay-react-native.git
+[submodule "desktop-electron"]
+	path = desktop-electron
+	url = https://github.com/raufkhandevs/relay-electron.git
