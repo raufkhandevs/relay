@@ -1,0 +1,3 @@
+[submodule "backend-laravel"]
+	path = backend-laravel
+	url = https://github.com/raufkhandevs/relay-laravel.git
