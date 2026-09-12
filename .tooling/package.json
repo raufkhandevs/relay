@@ -1,0 +1,8 @@
+{
+  "name": "relay-tooling",
+  "private": true,
+  "description": "Automation for driving Relay's clients. Deliberately not a dependency of any app: these are the tools used to verify the product, not part of it.",
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

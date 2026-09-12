@@ -6,3 +6,6 @@
 # browser automation scratch
 relay-*.png
 .playwright-mcp/
+
+# local automation tooling, not part of any app
+.tooling/node_modules/
