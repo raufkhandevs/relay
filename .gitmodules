@@ -1,3 +1,6 @@
 [submodule "backend-laravel"]
 	path = backend-laravel
 	url = https://github.com/raufkhandevs/relay-laravel.git
+[submodule "mobile-react-native"]
+	path = mobile-react-native
+	url = https://github.com/raufkhandevs/relay-react-native.git

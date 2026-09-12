@@ -4,9 +4,9 @@
 
 **Goal:** An iOS app on the simulator where you log in as a customer, see your tickets, open one, and watch a message posted from the web appear live.
 
-**Architecture:** Expo SDK 56 with a development build, not Expo Go. Token auth against the Laravel API, token stored in the iOS Keychain via `expo-secure-store`. Server state through TanStack Query. Realtime through `laravel-echo` and `pusher-js` against the same Reverb server the web client uses.
+**Architecture:** Expo SDK 57 with a development build, not Expo Go. Token auth against the Laravel API, token stored in the iOS Keychain via `expo-secure-store`. Server state through TanStack Query. Realtime through `laravel-echo` and `pusher-js` against the same Reverb server the web client uses.
 
-**Tech Stack:** Expo SDK 56, React Native, TypeScript, Expo Router, TanStack Query, expo-secure-store, laravel-echo, pusher-js.
+**Tech Stack:** Expo SDK 57 (expo ~57.0.22), Expo Router ~57.0.21, React Native, TypeScript, Expo Router, TanStack Query, expo-secure-store, laravel-echo, pusher-js.
 
 **Spec:** `docs/specs/2026-09-11-relay-design.md`
 
@@ -70,7 +70,7 @@ npx create-expo-app@latest mobile-react-native
 cd mobile-react-native
 ```
 
-This produces a TypeScript app using Expo Router. Read what it actually generated before assuming a structure.
+This produces a TypeScript app using Expo Router, with routes under `src/app/`, not `app/`. It also generates its own `AGENTS.md` and a `CLAUDE.md` that just includes it; task 5 replaces those.
 
 - [ ] **Step 3: Lock down secrets before the first commit**
 
@@ -118,7 +118,7 @@ Confirm the default Expo screen is on the simulator. This proves the toolchain w
 
 ```bash
 git add -A
-git commit -m "Add Expo SDK 56 app with a development build
+git commit -m "Add Expo SDK 57 app with a development build
 
 Expo Go cannot load expo-secure-store, which this app needs for Keychain
 token storage, so the app runs as a development build from the start.
@@ -145,9 +145,9 @@ git push -u origin main
 ### Task 2: API client, login, token in the Keychain
 
 **Files:**
-- Create: `lib/api.ts`, `lib/auth.ts`, `types/api.ts`
-- Create: `app/login.tsx`
-- Modify: `app/_layout.tsx`
+- Create: `src/lib/api.ts`, `src/lib/auth.ts`, `src/types/api.ts`
+- Create: `src/app/login.tsx`
+- Modify: `src/app/_layout.tsx`
 
 **Produces:** `api.get/post(path, init)` attaching the bearer token; `signIn(email, password)`, `signOut()`, `getToken()`; a login screen that routes to the ticket list on success.
 
@@ -167,7 +167,7 @@ npx expo run:ios
 
 - [ ] **Step 2: Declare the API types by hand, once**
 
-Create `types/api.ts`. The backend generates TypeScript for its own web client, but that file is not published anywhere this repo can import from, and the pagination envelope is not in it at all. Declare both here, in one place, so three screens do not each guess.
+Create `src/types/api.ts`. The backend generates TypeScript for its own web client, but that file is not published anywhere this repo can import from, and the pagination envelope is not in it at all. Declare both here, in one place, so three screens do not each guess.
 
 ```ts
 export type Role = 'customer' | 'agent';
@@ -219,7 +219,7 @@ export type CursorPaginated<T> = {
 
 - [ ] **Step 3: Write the token store**
 
-Create `lib/auth.ts`:
+Create `src/lib/auth.ts`:
 
 ```ts
 import * as SecureStore from 'expo-secure-store';
@@ -243,7 +243,7 @@ export async function clearToken(): Promise<void> {
 
 - [ ] **Step 4: Write the API client**
 
-Create `lib/api.ts`:
+Create `src/lib/api.ts`:
 
 ```ts
 import { getToken } from './auth';
@@ -313,7 +313,7 @@ Report whether the exception was actually needed. Expo's dev builds sometimes al
 
 - [ ] **Step 6: Write the login screen**
 
-Create `app/login.tsx` with email and password inputs, a submit button, and visible error and loading states. On submit, `POST /api/tokens` with `{email, password, device_name}` where `device_name` identifies this install, store the returned token with `setToken`, then route to the ticket list.
+Create `src/app/login.tsx` with email and password inputs, a submit button, and visible error and loading states. On submit, `POST /api/tokens` with `{email, password, device_name}` where `device_name` identifies this install, store the returned token with `setToken`, then route to the ticket list.
 
 The error state matters. A wrong password returns 422, and too many attempts returns 429 because the endpoint is rate limited. Both must show a readable message rather than a blank screen or a crash. Test both by hand.
 
@@ -321,7 +321,7 @@ Prefill the fields with `priya@relay.test` and `password` in development so you 
 
 - [ ] **Step 7: Wire TanStack Query at the root**
 
-In `app/_layout.tsx`, wrap the app in a `QueryClientProvider`. Route to `/login` when there is no stored token and to the ticket list when there is.
+In `src/app/_layout.tsx`, wrap the app in a `QueryClientProvider`. Route to `/login` when there is no stored token and to the ticket list when there is.
 
 - [ ] **Step 8: Verify by using it**
 
@@ -337,13 +337,13 @@ Subject: `Add API client with token auth stored in the Keychain`. Body should sa
 
 ### Task 3: Ticket list
 
-**Files:** Create `app/(app)/tickets/index.tsx`, `lib/queries.ts`
+**Files:** Create `src/app/(app)/tickets/index.tsx`, `src/lib/queries.ts`
 
 **Produces:** a ticket list fetched with TanStack Query, with loading, empty and error states.
 
 - [ ] **Step 1: Write the query**
 
-In `lib/queries.ts`:
+In `src/lib/queries.ts`:
 
 ```ts
 import { useQuery } from '@tanstack/react-query';
@@ -385,7 +385,7 @@ Subject: `Add ticket list with loading, empty and error states`.
 
 ### Task 4: Message thread, live over the websocket
 
-**Files:** Create `app/(app)/tickets/[id].tsx`, `lib/echo.ts`, `hooks/use-ticket-channel.ts`
+**Files:** Create `src/app/(app)/tickets/[id].tsx`, `src/lib/echo.ts`, `src/hooks/use-ticket-channel.ts`
 
 **Produces:** a thread that renders history and appends new messages pushed over Reverb.
 
@@ -401,7 +401,7 @@ Reverb speaks the Pusher protocol, which is why these are the same two libraries
 
 - [ ] **Step 2: Configure Echo**
 
-Create `lib/echo.ts`. Read `backend-laravel/resources/js/app.tsx` first to see the exact configuration that already works, and mirror it.
+Create `src/lib/echo.ts`. Read `backend-laravel/resources/js/app.tsx` first to see the exact configuration that already works, and mirror it.
 
 Two things are mandatory and both have already cost time on this project:
 
@@ -410,7 +410,7 @@ Two things are mandatory and both have already cost time on this project:
 
 - [ ] **Step 3: Write the channel hook**
 
-`hooks/use-ticket-channel.ts`, subscribing to `private-ticket.{id}` and listening for `.message.created`.
+`src/hooks/use-ticket-channel.ts`, subscribing to `private-ticket.{id}` and listening for `.message.created`.
 
 The leading dot is mandatory. Without it Echo expects a fully qualified PHP class name and matches nothing, with no error anywhere.
 
