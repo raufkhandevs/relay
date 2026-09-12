@@ -82,12 +82,36 @@ together, and it is the only place the design spends boldness.
   dots, one border radius and one grey shadow on every block regardless of hierarchy.
 - Border, fill, radius and shadow are spent by role. Not everything is a card.
 
-## Deferred, not rejected
+## Dark palette
 
-**Dark mode.** An agent watching a queue for a whole shift is exactly the user who wants it, so
-this is a real want rather than a nicety. It is out of scope here because it needs a second full
-palette honoured in three codebases, not a toggle in one of them. Until it exists, the web client
-ships no appearance toggle: a switch that changes nothing teaches people the interface is broken.
+Added after the light one shipped. An agent watching a queue for a whole shift is exactly the user
+who wants this, so it was recorded as owed rather than dropped.
+
+```
+ink      #E6EAF0   ground   #0E1319   surface  #161D26   rule  #242E3A
+accent   #4FA8C4
+open     #E0A159   pending  #8A96A6   resolved #5CC489   closed #6C7887
+```
+
+It is not an inversion, and that distinction is the whole of the work.
+
+- **The ground is lifted off black.** `#0E1319`, not `#000`. A pure black ground makes every
+  surface above it read as a glowing panel, and on OLED it smears during scroll.
+- **Surfaces rise rather than darken.** In light mode `surface` is brighter than `ground`; in dark
+  it is brighter too. Elevation is expressed the same way in both, so the same component hierarchy
+  survives the switch.
+- **Text is not pure white.** `#E6EAF0` against a dark ground. Full white haloes, and reading a
+  queue for eight hours is exactly the case where that matters.
+- **The accent moves rather than staying put.** `#1D6F8B` is legible on white and nearly invisible
+  on `#161D26`, so dark gets `#4FA8C4`: the same hue, lifted until it carries. A palette that keeps
+  one accent across both themes has picked a colour that is mediocre on each.
+- **Status colours lift too**, for the same reason. `#15803D` green disappears on a dark ground;
+  `#5CC489` reads.
+
+**Selection follows the operating system.** No in-app toggle. Someone who wants dark has already
+said so once at the OS level, and a per-app switch asks them to say it again in every app they own.
+The earlier toggle was removed because it did nothing; reintroducing one that works would still be
+answering a question the OS already answered.
 
 ## What would change my mind
 
