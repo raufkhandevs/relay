@@ -82,6 +82,13 @@ together, and it is the only place the design spends boldness.
   dots, one border radius and one grey shadow on every block regardless of hierarchy.
 - Border, fill, radius and shadow are spent by role. Not everything is a card.
 
+## Deferred, not rejected
+
+**Dark mode.** An agent watching a queue for a whole shift is exactly the user who wants it, so
+this is a real want rather than a nicety. It is out of scope here because it needs a second full
+palette honoured in three codebases, not a toggle in one of them. Until it exists, the web client
+ships no appearance toggle: a switch that changes nothing teaches people the interface is broken.
+
 ## What would change my mind
 
 A fourth client with a genuinely different job, or a real design system package shared across
