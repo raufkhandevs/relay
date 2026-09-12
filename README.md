@@ -69,6 +69,32 @@ A plain `git clone` gives you empty directories. If you already did that:
 The submodule pointers move when a slice is finished, not on every commit. Mid-slice the parent is
 behind on purpose.
 
+## Progress
+
+```
+Slice 1  backend, web, iOS, desktop live   ████████████████████  done
+Slice 2  reply from any client, one look   ████████████████████  done
+Slice 3  attachments                       ████████████████████  done
+Slice 4  typing indicators and presence    ░░░░░░░░░░░░░░░░░░░░  next
+Slice 5  desktop tray, badge, hotkey       ░░░░░░░░░░░░░░░░░░░░
+Slice 6  offline outbox on mobile          ░░░░░░░░░░░░░░░░░░░░
+Slice 7  push notifications                ░░░░░░░░░░░░░░░░░░░░  blocked
+Slice 8  ticket creation                   ░░░░░░░░░░░░░░░░░░░░
+```
+
+**Working today.** Sign in, read a ticket queue, open a thread, reply, and attach a file, on the
+web, on an iPhone and on a Mac. Messages arrive live on every client without a refresh. Light and
+dark follow the operating system.
+
+**Blocked, not forgotten.** Push notifications on iOS need an Apple Developer Program membership,
+which this project deliberately does not buy. The server side is built and the client handling is
+testable through the simulator; only the final hop to Apple is missing. Decision 0007 has the
+detail. Signing and notarising the desktop app needs the same membership.
+
+**Owed and written down.** Desktop upload progress is an indeterminate spinner rather than a
+percentage, because real progress needs a second IPC channel. Camera capture on iOS is unbuilt
+because the simulator has no camera.
+
 ## Docs
 
 Start with [the design](docs/specs/2026-09-11-relay-design.md). The screen layouts are in
@@ -88,11 +114,13 @@ what would change my mind:
 | [0007](docs/decisions/0007-stub-push-locally.md) | Stub push delivery locally |
 | [0008](docs/decisions/0008-three-repositories.md) | Four repositories, parent linking three submodules |
 
-## Build order
+## How a slice gets judged done
 
-Slice 1 is done when I type a message in the Electron console and it appears in the browser and on
-the iOS simulator, without a refresh, in under a second. That one sentence forces both auth modes,
-the websocket server, channel authorisation and three client runtimes to work at once.
+Slice 1's test was one sentence: type a message in the Electron console and it appears in the
+browser and on the iOS simulator, without a refresh, in under a second. That forces both auth
+modes, the websocket server, channel authorisation and three client runtimes to work at once.
 
-After that: ticket lifecycle, attachments, push, presence, desktop tray behaviour, offline on
-mobile, a Livewire twin of one screen for comparison, then packaging.
+Every slice since has had a sentence like it, and none has been called done on a passing test
+alone. The clients get driven for real: Playwright for the web, Playwright's Electron support for
+the desktop app, Maestro for the simulator. Three separate bugs in this project were tests passing
+or failing for the wrong reason, so a green suite is evidence, not proof.
